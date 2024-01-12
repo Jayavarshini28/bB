@@ -1,0 +1,55 @@
+from PIL import Image, ImageDraw
+
+json_data = [
+    {
+        "BlockType": "LINE",
+        "Confidence": 99.81885419921875,
+        "Text": "Date: 08/05/21",
+        "Geometry": {
+            "BoundingBox": {
+                "Width": 0.10531479120254517,
+                "Height": 0.012496307492256165,
+                "Left": 0.12959997355937958,
+                "Top": 0.18651916086673737
+            }
+        }
+    },
+    {
+        "BlockType": "LINE",
+        "Confidence": 99.81885419921875,
+        "Text": "Date: 08/05/21",
+        "Geometry": {
+            "BoundingBox": {
+                "Width": 0.10531479120254517,
+                "Height": 0.012496307492256165,
+                "Left": 0.12959997355937958,
+                "Top": 0.18651916086673737
+            }
+        }
+    }
+]
+
+# Load your image
+image_path = "C:/Users/HP/Desktop/images.jpg" # Replace with the actual path to your image
+image = Image.open(image_path)
+
+# Create a drawing object
+draw = ImageDraw.Draw(image)
+
+# Extract bounding box data and draw rectangles
+for entry in json_data:
+    geometry = entry.get("Geometry", {})
+    bounding_box = geometry.get("BoundingBox", {})
+
+    # Convert relative coordinates to absolute coordinates
+    image_width, image_height = image.size
+    left = bounding_box["Left"] * image_width
+    top = bounding_box["Top"] * image_height
+    right = left + bounding_box["Width"] * image_width
+    bottom = top + bounding_box["Height"] * image_height
+
+    # Draw rectangle
+    draw.rectangle([left, top, right, bottom], outline="red")
+
+# Save or display the image with rectangles
+image.show()  # Use image.save("output.jpg") to save the modified image
